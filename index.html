@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Products</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    header {
+      background: url('pixel-bg.jpg') center/cover no-repeat;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .hero {
+      margin-top: 2rem;
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+    }
+
+    .hero button {
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .filters {
+      padding: 1rem;
+      background-color: #fff;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .products-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+    }
+
+    .product {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .product img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .about, .contact {
+      padding: 2rem;
+      background-color: #fff;
+      margin-top: 1rem;
+    }
+
+    .contact form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact input, .contact textarea {
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .contact button {
+      padding: 0.75rem;
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #222;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header & Navigation -->
+  <header>
+    <nav class="navbar">
+      <h1 class="logo">Pixel Store</h1>
+      <ul class="nav-links">
+        <li><a href="#products">Products</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <input type="text" id="searchInput" placeholder="Search products...">
+    </nav>
+    <div class="hero">
+      <h2>Discover the new Pixel Experience</h2>
+      <p>High-performance, sleek design, and cutting-edge technology.</p>
+      <button onclick="scrollToProducts()">Shop Now</button>
+    </div>
+  </header>
+
+  <!-- Filters -->
+  <section class="filters">
+    <label for="sort">Sort by:</label>
+    <select id="sort" onchange="sortProducts()">
+      <option value="default">Default</option>
+      <option value="priceLowHigh">Price: Low to High</option>
+      <option value="priceHighLow">Price: High to Low</option>
+    </select>
+  </section>
+
+  <!-- Products Section -->
+  <section id="products" class="products-container"></section>
+
+  <!-- About Section -->
+  <section id="about" class="about">
+    <h2>About Pixel</h2>
+    <p>Pixel devices are made by Google, offering high-end performance with the latest Android updates.</p>
+    <video controls width="600">
+      <source src="pixel-ad.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact">
+    <h2>Contact Us</h2>
+    <form>
+      <input type="text" placeholder="Name" required>
+      <input type="email" placeholder="Email" required>
+      <textarea placeholder="Message" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Pixel Store. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const products = [
+      { name: "Pixel 8 Pro", price: 999, image: "pixel8pro.jpg" },
+      { name: "Pixel 8", price: 699, image: "pixel8.jpg" },
+      { name: "Pixel Buds", price: 199, image: "pixelbuds.jpg" },
+      { name: "Pixel Watch", price: 349, image: "pixelwatch.jpg" }
+    ];
+
+    function renderProducts(productList) {
+      const container = document.getElementById("products");
+      container.innerHTML = "";
+      productList.forEach(p => {
+        const item = document.createElement("div");
+        item.className = "product";
+        item.innerHTML = `
+          <img src="${p.image}" alt="${p.name}">
+          <h3>${p.name}</h3>
+          <p>$${p.price}</p>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function scrollToProducts() {
+      document.getElementById("products").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function sortProducts() {
+      const sortType = document.getElementById("sort").value;
+      let sorted = [...products];
+      if (sortType === "priceLowHigh") {
+        sorted.sort((a, b) => a.price - b.price);
+      } else if (sortType === "priceHighLow") {
+        sorted.sort((a, b) => b.price - a.price);
+      }
+      renderProducts(sorted);
+    }
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      const value = e.target.value.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(value));
+      renderProducts(filtered);
+    });
+
+    renderProducts(products);
+  </script>
+</body>
+
+</html>
